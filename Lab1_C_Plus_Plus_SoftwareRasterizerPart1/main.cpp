@@ -113,6 +113,12 @@ int main(){
     // A sample of color(s) to play with
     ColorRGB red;
     red.r = 255; red.g = 0; red.b = 0;
+
+    ColorRGB blue;
+    blue.r = 0; blue.g = 0; blue.b = 225;
+
+    ColorRGB green;
+    green.r = 0; green.g = 225; green.b = 0;
         
     // Points for our Line
     Vec2 line[2] = {Vec2(0,0), Vec2(100,100)};
@@ -125,9 +131,13 @@ int main(){
 
     // Data for our triangle
     Vec2 tri[3] = {Vec2(160,60),Vec2(150,10),Vec2(75,190)};
+    Vec2 tri1[3] = { Vec2(260,80),Vec2(170,10),Vec2(160,90) };
+    Vec2 tri2[3] = { Vec2(10,60),Vec2(50,70),Vec2(35,26) };
 
     // Draw a triangle
     triangle(tri[0],tri[1],tri[2],canvas,red);
+    triangle(tri1[0], tri1[1], tri1[2], canvas, blue);
+    triangle(tri2[0], tri2[1], tri2[2], canvas, green);
 
     // Output the final image
     canvas.outputTGAImage("graphics_lab1.ppm");
