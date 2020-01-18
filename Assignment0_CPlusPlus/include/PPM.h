@@ -10,6 +10,9 @@
 #define PPM_H
 
 #include <string>
+#include <fstream>
+#include <iostream>
+#include <vector>
 
 class PPM{
 public:
