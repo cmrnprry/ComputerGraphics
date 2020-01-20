@@ -3,14 +3,16 @@
 *TODO*: Please edit the following information in your assignment
 
 * Name and partners name (At most 1 partner for this assignment): 
+	Cameron Perry and Jamie Camera
 * How many hours did it take you to complete this assignment? 
+	at least 6 :(
 * Did you collaborate or share ideas with any other students/TAs/Professors? 
+	Andrew Knollmyer 
 * Did you use any external resources? 
-  * (tbd if any)
-  * (tbd if any)
-  * (tbd if any)
+  * StackOverflow (https://stackoverflow.com/questions/5207550/in-c-is-there-a-way-to-go-to-a-specific-line-in-a-text-file)
+  * cpp tutorials
 * (Optional) What was the most interesting part of the assignment? How would you improve this assignment?
-  
+  	
 ## Description
 
 C++ is the standard programming language for programming in the computer graphics, gaming, entertainment, and other industies that require high performance. While we can learn computer graphics in any general purpose language, the long term outlook for jobs appears to remain in C++ (And besides, once you learn how to work in C++, you could work in other languages as needed. We'll also see the GLSL language which is C-based). For this exercise(and all that follow), you will be using modern C++. This means C++11 and beyond (C++11 is the standard of the language in the year 2011. There are further versions C++14, C++17, C++20, etc).
