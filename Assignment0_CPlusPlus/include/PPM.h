@@ -13,6 +13,8 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include <stdio.h>
+
 
 class PPM{
 public:
@@ -38,7 +40,8 @@ public:
     inline int getHeight(){ return m_height; }
 // NOTE:    You may add any helper functions you like in the
 //          private section.
-private:    
+private:
+
     // Store the raw pixel data here
     // Data is R,G,B format
     unsigned char* m_PixelData;

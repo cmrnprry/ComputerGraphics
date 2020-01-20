@@ -1,18 +1,5 @@
 #include "PPM.h"
 
-struct myPixel {
-    int R;
-    int B;
-    int G;
-
-    myPixel(int red, int blue, int green)
-    {
-        R = red;
-        B = blue;
-        G = green;
-    }
-};
-
 std::ifstream& GotoLine(std::ifstream& file, unsigned int num) {
     for (int i = 0; i < num - 1; ++i) {
         file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -27,31 +14,49 @@ PPM::PPM(std::string fileName){
 
 
     std::ifstream inFile;
-    std::vector<unsigned int> pixels;
-    
+
     inFile.open(fileName);
 
     if (inFile.is_open())
     {
-        std::string line;
-        GotoLine(inFile, 5);
+      std::string line;
 
+       GotoLine(inFile, 3);
+        
+       //gets the width
+       getline(inFile, line, ' ');
+       m_width = stoi(line);
+
+       //gets the height
+       getline(inFile, line);
+       m_height = stoi(line);
+
+       //goes to the pixel data
+        GotoLine(inFile, 5);
+        
+        char * tok;
+        int i = 0;
+        
         while (getline(inFile, line))
         {
-            pixels.push_back(stoi(line));
-        }
+            const char* cStr = new char[line.length()];
+            cStr = line.c_str();
 
-        for (int i = 0; i < pixels.size(); i += 3)
-        {
-            myPixel x = myPixel(i, i + 1, i + 2);
+            while (tok != NULL)
+            {
+                m_PixelData[i] = (unsigned) tok;
+                tok = strtok(NULL, " ");
+                i++;
+            }
+            
+            delete[] cStr;
         }
     }
-
-   
 }
 
 // Destructor clears any memory that has been allocated
 PPM::~PPM(){
+    
 }
 
 // Saves a PPM Image to a new file.
@@ -72,7 +77,8 @@ void PPM::savePPM(std::string outputFileName){
 // 0 in a ppm.
 void PPM::darken(){
     // TODO: Output a 'filtered' PPM image.
-    
+
+
 
 }
 
