@@ -1,4 +1,5 @@
 #include "StarList.h"
+#include <iostream>
 
 StarList::StarList(unsigned int numStars, float spread, float speed) : spread_(spread), speed_(speed)
 {
@@ -35,7 +36,10 @@ void StarList::updateAndRender(QImage& image, float delta, const QSize& windowSi
 
     // Note the conversion to radians
     // TODO: Modify me
-    float tanHalfFOV = 1;
+    const float PI = 3.1415926535897;
+
+    float tanHalfFOV = 2 * atan(halfHeight / (halfWidth * 2));
+    
 
     // Iterate through all of your stars 
     for (int i = 0; i < stars_.size(); i++) {
@@ -47,12 +51,13 @@ void StarList::updateAndRender(QImage& image, float delta, const QSize& windowSi
         }
 
         // TODO: Modify me!!
-        float givePerspective = 1;
+        float givePerspective = stars_[i].z / tanHalfFOV;
+        
 
         // Apply our perspective
-        int x = (int)((stars_[i].x / (givePerspective)) * halfWidth + halfWidth);
-        int y = (int)((stars_[i].y / (givePerspective)) * halfHeight + halfHeight);
-
+        int x = (int)((stars_[i].x / givePerspective) * halfWidth + halfWidth);
+        int y = (int)((stars_[i].y / givePerspective) * halfHeight + halfHeight);
+        
         // Reinitialize a star
         if (x <0 || x >= windowSize.width()) {
             initStar(i);
