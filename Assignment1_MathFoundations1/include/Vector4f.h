@@ -45,40 +45,40 @@ struct Vector4f{
     // Multiplication Operator
     // Multiply vector by a uniform-scalar.
     Vector4f& operator *=(float s){
-        this.x = x * s;
-        this.y = y * s;
-        this.z = z * s;
-        this.w = w * s;
+        this->x = x * s;
+        this->y = y * s;
+        this->z = z * s;
+        this->w = w * s;
 
         return (*this);
     }
 
     // Division Operator
     Vector4f& operator /=(float s){
-        this.x = x / s;
-        this.y = y / s;
-        this.z = z / s;
-        this.w = w / s;
+        this->x = x / s;
+        this->y = y / s;
+        this->z = z / s;
+        this->w = w / s;
 
         return (*this);
     }
 
     // Addition operator
     Vector4f& operator +=(const Vector4f& v){
-        this.x = x + v.x;
-        this.y = y + v.y;
-        this.z = z + v.z;
-        this.w = w + v.w;
+        this->x = x + v.x;
+        this->y = y + v.y;
+        this->z = z + v.z;
+        this->w = w + v.w;
 
       return (*this);
     }
 
     // Subtraction operator
     Vector4f& operator -=(const Vector4f& v){
-        this.x = x - v.x;
-        this.y = y - v.y;
-        this.z = z - v.z;
-        this.w = w - v.w;
+        this->x = x - v.x;
+        this->y = y - v.y;
+        this->z = z - v.z;
+        this->w = w - v.w;
 
       return (*this);
     }
@@ -138,10 +138,10 @@ inline Vector4f operator -(const Vector4f& a, const Vector4f& b){
 // Vector Projection
 // Note: This is the vector projection of 'a' onto 'b'
 inline Vector4f Project(const Vector4f& a, const Vector4f& b){
-    var dot = Dot(a, b);
-    var mag = Magnitude(a) * Magnitude(a);
-    var div = dot / mag;
-    Vector4f vec = b * div;
+    float dot = Dot(a, b);
+    float mag = Magnitude(a) * Magnitude(a);
+    float div = dot / mag;
+    Vector4f vec = a * div;
 
     return vec;
 }
@@ -149,7 +149,7 @@ inline Vector4f Project(const Vector4f& a, const Vector4f& b){
 // Set a vectors magnitude to 1
 // Note: This is NOT generating a normal vector
 inline Vector4f Normalize(const Vector4f& v){
-    var mag = Magnitude(v);
+    float mag = Magnitude(v);
 
     Vector4f vec = v / mag;
 
@@ -163,9 +163,9 @@ inline Vector4f Normalize(const Vector4f& v){
 //       to vectors in 3-dimensions. Simply ignore w, and set to (0,0,0,1)
 //       for this vector.
 inline Vector4f CrossProduct(const Vector4f& a, const Vector4f& b){
-    float cx = (a.y * b.z) − (a.z * b.y);
-    float cy = (a.z * b.x) − (a.x * b.z);
-    float cz = (a.x * b.y) − (a.y * b.x);
+    float cx = (a.y * b.z) - (a.z * b.y);
+    float cy = (a.z * b.x) - (a.x * b.z);
+    float cz = (a.x * b.y) - (a.y * b.x);
     
     Vector4f vec = Vector4f(cx, cy, cz, 1);
 
