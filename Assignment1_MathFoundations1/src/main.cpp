@@ -172,6 +172,122 @@ bool unitTest5(){
     return false;
 }
 
+//Vector4D Tests
+bool unitTestV0() {
+    Vector4f a(1, 2, 3, 4);
+
+    if (a[0] == 1 && a[1] == 2 && a[2] == 3 && a[3] == 4) {
+        return true;
+    }
+    return false;
+}
+
+bool unitTestV1() {
+    Vector4f a(1, 2, 3, 4);
+    a *= 3;
+
+    if (a[0] == 3 && a[1] == 6 && a[2] == 9 && a[3] == 12) {
+        return true;
+    }
+    return false;
+}
+
+bool unitTestV2() {
+    Vector4f a(1, 2, 3, 4);
+    a /= 2;
+
+    if (a[0] == 0.5 && a[1] == 1 && a[2] == 1.5 && a[3] == 2) {
+        return true;
+    }
+    return false;
+}
+
+
+bool unitTestV3() {
+    Vector4f a(1, 2, 3, 4);
+    Vector4f b(1, 2, 3, 4);
+
+    a += b;
+
+    if (a[0] == 2 && a[1] == 4 && a[2] == 6 && a[3] == 8) {
+        return true;
+    }
+    return false;
+}
+
+bool unitTestV4() {
+    Vector4f a(1, 2, 3, 4);
+    Vector4f b(1, 2, 3, 4);
+
+    a -= b;
+
+    if (a[0] == 0 && a[1] == 0 && a[2] == 0 && a[3] == 0) {
+        return true;
+    }
+    return false;
+}
+
+bool unitTestV5() {
+    Vector4f a(1, 2, 3, 4);
+    Vector4f b(4, 3, 2, 1);
+
+    float c = Dot(a, b);
+
+    if (c == 20) {
+        return true;
+    }
+    return false;
+}
+
+bool unitTestV6() {
+    Vector4f a(4, 4, 4, 4);
+
+    float b = Magnitude(a);
+       
+    if (b == 8) {
+        return true;
+    }
+    return false;
+}
+
+bool unitTestV7() {
+    Vector4f a(2, 2, 2, 2);
+    Vector4f b(4, 1, 2, 1);
+
+    Vector4f c = Project(a, b);
+
+
+    if (c[0] == 2 && c[1] == 2 && c[2] == 2 && c[3] == 2) {
+        return true;
+    }
+    return false;
+}
+
+bool unitTestV8() {
+    Vector4f a(2, 2, 2, 2);
+
+    Vector4f b = Normalize(a);
+
+
+    if (b[0] == .5 && b[1] == .5 && b[2] == .5 && b[3] == .5) {
+        return true;
+    }
+    return false;
+}
+
+bool unitTestV9() {
+    Vector4f a(1, 2, 3, 4);
+    Vector4f b(4, 3, 2, 1);
+
+    Vector4f c = CrossProduct(a, b);
+
+
+    if (c[0] == -5 && c[1] == 10 && c[2] == -5 && c[3] == 1) {
+        return true;
+    }
+    return false;
+}
+
 int main(){
     // Keep track of the tests passed
     unsigned int testsPassed = 0;
@@ -183,6 +299,19 @@ int main(){
     std::cout << "Passed 3: " << unitTest3() << " \n";
     std::cout << "Passed 4: " << unitTest4() << " \n";
     std::cout << "Passed 5: " << unitTest5() << " \n";
+
+    //Vector4D Tests
+    std::cout << "Passed Vector4D Test 0: " << unitTestV0() << " \n";
+    std::cout << "Passed Vector4D Test 1: " << unitTestV1() << " \n";
+    std::cout << "Passed Vector4D Test 2: " << unitTestV2() << " \n";
+    std::cout << "Passed Vector4D Test 3: " << unitTestV3() << " \n";
+    std::cout << "Passed Vector4D Test 4: " << unitTestV4() << " \n";
+    std::cout << "Passed Vector4D Test 5: " << unitTestV5() << " \n";
+    std::cout << "Passed Vector4D Test 6: " << unitTestV6() << " \n";
+    std::cout << "Passed Vector4D Test 7: " << unitTestV7() << " \n";
+    std::cout << "Passed Vector4D Test 8: " << unitTestV8() << " \n";
+    std::cout << "Passed Vector4D Test 9: " << unitTestV9() << " \n";
+
 
     return 0;
 }

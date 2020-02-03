@@ -1,37 +1,8 @@
 Lab4_MatrixTransformations/Build/*
 Assignment1_MathFoundations1/Build/*
 Assignment1_MathFoundations1/src/.vs/*
-lab0_setup/CMakeFiles/3.16.2/x64/Debug/VCTargetsPath.tlog/VCTargetsPath.lastbuildstate
-lab0_setup/.vs/Lab0/v16/.suo
-lab0_setup/.vs/Lab0/v16/Browse.VC.db
-lab0_setup/.vs/Lab0/v16/ipch/AutoPCH/3ca515eba6f6f91f/MAIN.ipch
-lab0_setup/.vs/Lab0/v16/ipch/AutoPCH/96c15ccd4ccda3db/LAB0.ipch
-*.db
-*.vcxproj
-*.filters
-*.user
-*.cmake
-*.tlog
-*.log
-*.obj
-*.pdb
-*.txt
-*.dll
-*.json
-*.check_cache
-*.exe
-*.sln
-*.depend
-*.list
-*.rule
-*.c
-*.bin
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-*.code-workspace
+lab0_setup/CMakeFiles/*
+lab0_setup/.vs/*
 
 # Prerequisites
 *.d
@@ -149,7 +120,3 @@ Lab1_C_Plus_Plus_SoftwareRasterizerPart1/.vs/Lab1_C_Plus_Plus_SoftwareRasterizer
 *.ejs
 *.1
 *.pem
-
-Lab4_MatrixTransformations/Build/.vs/Lab/v16/Browse.VC.opendb
-Lab4_MatrixTransformations/Build/.vs/Lab/v16/Solution.VC.db-shm
-Lab4_MatrixTransformations/Build/.vs/Lab/v16/Solution.VC.db-wal
