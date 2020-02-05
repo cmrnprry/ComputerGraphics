@@ -112,28 +112,28 @@ bool unitTest3(){
 	Vector4f c(0,0,1.0f,0);
 	Vector4f d(0,0,0,1.0f);
 	Matrix4f myScaled(a,b,c,d);
-    myScaled.MakeScale(2.0f,2.0f,2.0f);
-
+    Matrix4f newScaled = myScaled.MakeScale(2.0f,2.0f,2.0f);
+   
     if(
-        glmScale[0][0]==myScaled[0][0] &&
-        glmScale[0][1]==myScaled[0][1] &&
-        glmScale[0][2]==myScaled[0][2] &&
-        glmScale[0][3]==myScaled[0][3] &&
-        glmScale[1][0]==myScaled[1][0] &&
-        glmScale[1][1]==myScaled[1][1] &&
-        glmScale[1][2]==myScaled[1][2] &&
-        glmScale[1][3]==myScaled[1][3] &&
-        glmScale[2][0]==myScaled[2][0] &&
-        glmScale[2][1]==myScaled[2][1] &&
-        glmScale[2][2]==myScaled[2][2] &&
-        glmScale[2][3]==myScaled[2][3] &&
-        glmScale[3][0]==myScaled[3][0] &&
-        glmScale[3][1]==myScaled[3][1] &&
-        glmScale[3][2]==myScaled[3][2] &&
-        glmScale[3][3]==myScaled[3][3]){
+        glmScale[0][0]==newScaled[0][0] &&
+        glmScale[0][1]== newScaled[0][1] &&
+        glmScale[0][2]== newScaled[0][2] &&
+        glmScale[0][3]== newScaled[0][3] &&
+        glmScale[1][0]== newScaled[1][0] &&
+        glmScale[1][1]== newScaled[1][1] &&
+        glmScale[1][2]== newScaled[1][2] &&
+        glmScale[1][3]== newScaled[1][3] &&
+        glmScale[2][0]== newScaled[2][0] &&
+        glmScale[2][1]== newScaled[2][1] &&
+        glmScale[2][2]== newScaled[2][2] &&
+        glmScale[2][3]== newScaled[2][3] &&
+        glmScale[3][0]== newScaled[3][0] &&
+        glmScale[3][1]== newScaled[3][1] &&
+        glmScale[3][2]== newScaled[3][2] &&
+        glmScale[3][3]== newScaled[3][3]){
             return true;
+
     }
-	
     return false;	
 }
 
