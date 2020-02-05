@@ -11,10 +11,11 @@
 ## Modify this section
 
 - How many hours did it take you to complete this lab?
+	less than 1
 - Did you collaborate with any other students/TAs/Professors?
+	just me
 - Did you use any external resources? (Cite them below)
-  - tbd
-  - tbd
+  - nope
 - (Optional) What was your favorite part of the lab?
 - (Optional) How would you improve the lab?
 
