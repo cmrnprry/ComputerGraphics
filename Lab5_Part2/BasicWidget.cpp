@@ -189,9 +189,9 @@ void BasicWidget::initializeGL()
       1.0f, 1.0f, 0.0f, 1.0f  // yellow
   };
   // Define our indices
-  static const GLuint idx[6] =
+  static const GLuint idx[5] =
   {
-      0, 1, 2, 2, 1, 3
+      0, 1, 2, 1, 3
   };
   // ENDTODO
   // Set up our buffers and our vao
@@ -260,7 +260,7 @@ void BasicWidget::paintGL()
   shaderProgram_.bind();
   vao_.bind();
   // TODO: Change number of indices drawn
-  glDrawElements(GL_TRIANGLES, ??, GL_UNSIGNED_INT, 0);
+  glDrawElements(GL_TRIANGLES, 5, GL_UNSIGNED_INT, 0);
   // ENDTODO
   vao_.release();
   shaderProgram_.release();
