@@ -9,11 +9,12 @@
 * Name and partners name (At most 1 partner for this assignment): 
 	Cameron Perry and Jamie Camera
 * How many hours did it take you to complete this assignment? 
+	2
 * Did you collaborate or share ideas with any other students/TAs/Professors? 
+	no
 * Did you use any external resources? 
-  * (tbd if any)
-  * (tbd if any)
-  * (tbd if any)
+  * the slides
+  * some websites that told me math
 * (Optional) What was the most interesting part of the assignment? How would you improve this assignment?
 
 ## Logistics
