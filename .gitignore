@@ -5,7 +5,9 @@ Lab5_Part1/out/*
 Lab5_Part2/Build/*
 Lab5_Part2/out/*
 Assignment1_MathFoundations1/Build/*
+Assignment1_MathFoundations1/out/*
 Assignment1_MathFoundations1/src/.vs/*
+Assignment1_MathFoundations1/.vs/*
 lab0_setup/CMakeFiles/*
 lab0_setup/.vs/*
 
@@ -135,3 +137,4 @@ Lab5_Part1/Build/Debug/Lab.ilk
 Lab5_Part1/Build/CMakeFiles/generate.stamp
 Lab5_Part1/Build/CMakeFiles/3.16.2/CompilerIdCXX/CMakeCXXCompilerId.cpp
 Lab5_Part1/Build/.vs/Lab/v16/.suo
+*.lnk

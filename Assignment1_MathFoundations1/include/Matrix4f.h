@@ -4,6 +4,8 @@
 #define MATRIX4F_H
 
 #include <cmath>
+#include <iostream>
+
 
 // We need to Vector4f header in order to multiply a matrix
 // by a vector.
@@ -75,42 +77,45 @@ public:
     Matrix4f MakeRotationX(float t) {
         Matrix4f n;
         n[0][0] = 1; n[1][0] = 0;      n[2][0] = 0;         n[3][0] = 0;
-        n[0][1] = 0; n[1][1] = cos(t); n[2][1] = -(sin(t)); n[3][1] = 0;
-        n[0][2] = 0; n[1][2] = sin(t); n[2][2] = cos(t);    n[3][2] = 0;
+        n[0][1] = 0; n[1][1] = this->n[1][1] *  cos(t); n[2][1] = this->n[2][1] * -(sin(t)); n[3][1] = 0;
+        n[0][2] = 0; n[1][2] = this->n[1][2] * sin(t); n[2][2] = this->n[2][2] * cos(t);    n[3][2] = 0;
         n[0][3] = 0; n[1][3] = 0;      n[2][3] = 0;         n[3][3] = 1;
         return n;
     }
     Matrix4f MakeRotationY(float t) {
         Matrix4f n;
-        n[0][0] = cos(t);    n[1][0] = 0; n[2][0] = sin(t);    n[3][0] = 0;
+        n[0][0] = this->n[0][0] *  cos(t);    n[1][0] = 0; n[2][0] = this->n[2][0] * sin(t);    n[3][0] = 0;
         n[0][1] = 0;         n[1][1] = 1; n[2][1] = 0;         n[3][1] = 0;
-        n[0][2] = -(sin(t)); n[1][2] = 0; n[2][2] = cos(t);    n[3][2] = 0;
+        n[0][2] = this->n[0][2] * -(sin(t)); n[1][2] = 0; n[2][2] = this->n[2][2] * cos(t);    n[3][2] = 0;
         n[0][3] = 0;         n[1][3] = 0; n[2][3] = 0;         n[3][3] = 1;
         return n;
     }
     Matrix4f MakeRotationZ(float t) {
         Matrix4f n;
-        n[0][0] = cos(t);    n[1][0] = -sin(t); n[2][0] = 0;  n[3][0] = 0;
-        n[0][1] = sin(t);    n[1][1] = cos(t);  n[2][1] = 0;  n[3][1] = 0;
+        n[0][0] = this->n[0][0] * cos(t);    n[1][0] = this->n[1][0] * -sin(t); n[2][0] = 0;  n[3][0] = 0;
+        n[0][1] = this->n[0][1]  * sin(t);    n[1][1] = this->n[1][1] * cos(t);  n[2][1] = 0;  n[3][1] = 0;
         n[0][2] = 0;         n[1][2] = 0;       n[2][2] = 1;  n[3][2] = 0;
         n[0][3] = 0;         n[1][3] = 0;       n[2][3] = 0;  n[3][3] = 1;
         return n;
     }
     Matrix4f MakeScale(float sx, float sy, float sz) {
-        Matrix4f n;
 
-        n[0][0] = 1; n[1][0] = 0; n[2][0] = 0; n[3][0] = sx;
-        n[0][1] = 0; n[1][1] = 1; n[2][1] = 0; n[3][1] = sy;
-        n[0][2] = 0; n[1][2] = 0; n[2][2] = 1; n[3][2] = sz;
-        n[0][3] = 0; n[1][3] = 0; n[2][3] = 0; n[3][3] = 1;
+        
+        Matrix4f m;
 
-        return n;
-    };
+        m[0][0] = this->n[0][0] * sx; m[1][0] = 0; m[2][0] = 0; m[3][0] = 0;
+        m[0][1] = 0; m[1][1] = this->n[1][1] * sy; m[2][1] = 0; m[3][1] = 0;
+        m[0][2] = 0; m[1][2] = 0; m[2][2] = this->n[2][2] * sz; m[3][2] = 0;
+        m[0][3] = 0; m[1][3] = 0; m[2][3] = 0; m[3][3] = this->n[3][3] * sz;
 
-    // Matrix Multiplication
+        return m;
+    }
+};
+
+   // Matrix Multiplication
     Matrix4f operator *(const Matrix4f& A, const Matrix4f& B) {
 
-        Matrix4f mat4;
+        Matrix4f mat4D;
 
         mat4D[0][0] = (A[0][0] * B[0][0]) + (A[0][1] * B[1][0] + (A[0][2] * B[2][0]) + (A[0][3] * B[3][0]));
 
@@ -148,7 +153,7 @@ public:
 
         mat4D[3][3] = (A[3][0] * B[0][3]) + (A[3][1] * B[1][3] + (A[3][2] * B[2][3]) + (A[3][3] * B[3][3]));
 
-        return mat4;
+        return mat4D;
     }
 
     // Matrix multiply by a vector
@@ -167,7 +172,5 @@ public:
 
         return vec;
     }
-
-
 
 #endif
