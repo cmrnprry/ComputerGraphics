@@ -1,5 +1,6 @@
 #include "BasicWidget.h"
 
+
 //////////////////////////////////////////////////////////////////////
 // Publics
 BasicWidget::BasicWidget(QWidget* parent) : QOpenGLWidget(parent), vbo_(QOpenGLBuffer::VertexBuffer), ibo_(QOpenGLBuffer::IndexBuffer), logger_(this)
@@ -125,25 +126,14 @@ void BasicWidget::initializeGL()
   static const GLfloat verts[21] =
   {
     0.0f, 0.0f, 0.0f, // Center vertex position
-        
-
     1.0f, 1.0f, 0.0f,  // Top right vertex position
-        
-
-    -1.0f,  1.0f, 0.0f,  // Top left vertex position
-
-
+   -1.0f,  1.0f, 0.0f,  // Top left vertex position
+   
     1.0f, 0.0f, 0.0f, 1.0f, // red
     0.0f, 1.0f, 0.0f, 1.0f, // green
     0.0f, 0.0f, 1.0f, 1.0f // blue
   };
-  // Define our vert colors
-  static const GLfloat colors[12] =
-  {
-      1.0f, 0.0f, 0.0f, 1.0f, // red
-      0.0f, 1.0f, 0.0f, 1.0f, // green
-      0.0f, 0.0f, 1.0f, 1.0f // blue
-  };
+
   // Define our indices
   static const GLuint idx[3] =
   {
@@ -158,7 +148,7 @@ void BasicWidget::initializeGL()
   vbo_.create();
   vbo_.setUsagePattern(QOpenGLBuffer::StaticDraw);
   vbo_.bind();
-  vbo_.allocate(verts, 3 * 4 * sizeof(GL_FLOAT));
+  vbo_.allocate(verts, 3 * 4 * 4 * sizeof(GL_FLOAT));
   // END TODO
   
 
@@ -166,7 +156,7 @@ void BasicWidget::initializeGL()
   ibo_.create();
   ibo_.setUsagePattern(QOpenGLBuffer::StaticDraw);
   ibo_.bind();
-  ibo_.allocate(idx, 3 * sizeof(GL_UNSIGNED_INT));
+  ibo_.allocate(idx, 4 * sizeof(GL_UNSIGNED_INT));
   // ENDTODO
 
   // Create a VAO to keep track of things for us.
@@ -181,7 +171,7 @@ void BasicWidget::initializeGL()
       3,
       GL_FLOAT,
       GL_FALSE,
-      sizeof(float) * 3,
+      sizeof(GL_FLOAT) * 6,
       0
   );
   shaderProgram_.enableAttributeArray(0);
@@ -192,8 +182,8 @@ void BasicWidget::initializeGL()
       4,
       GL_FLOAT,
       GL_FALSE,
-      sizeof(float) * 6,
-      (GLvoid*)(4 * sizeof(GL_FLOAT))
+      sizeof(GL_FLOAT) * 6,
+      (GLvoid*)(3 * sizeof(GL_FLOAT))
   );
 
   shaderProgram_.enableAttributeArray(1);
@@ -201,10 +191,14 @@ void BasicWidget::initializeGL()
 
   // END TODO
 
+  resizeGL(width(), height());
+
   ibo_.bind();
   // Releae the vao THEN the vbo
   vao_.release();
   shaderProgram_.release();
+
+
 
   glViewport(0, 0, width(), height());
 }
@@ -212,7 +206,18 @@ void BasicWidget::initializeGL()
 void BasicWidget::resizeGL(int w, int h)
 {
   glViewport(0, 0, w, h);
+
   // TODO:  Set up the model, view, and projection matrices
+  projection_.perspective(45.0f, (float)width() / (float)height(), 0.1f, 100.0f);
+  
+  view_.lookAt(
+      QVector3D(4, 3, 3), // Camera is at (4,3,3), in World Space
+      QVector3D(0, 0, 0), // and looks at the origin
+      QVector3D(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
+  );
+
+
+  QMatrix4x4 mvp = projection_ * view_ * model_;
   // END TODO
 }
 
