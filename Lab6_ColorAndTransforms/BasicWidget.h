@@ -20,6 +20,8 @@ private:
   QMatrix4x4 model_;
   QMatrix4x4 view_;
   QMatrix4x4 projection_;
+  QMatrix4x4 mvp;
+
   
 protected:
   // Required interaction overrides

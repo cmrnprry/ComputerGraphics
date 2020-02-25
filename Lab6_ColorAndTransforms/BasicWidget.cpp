@@ -27,16 +27,14 @@ QString BasicWidget::vertexShaderString() const
     "layout(location = 0) in vec3 position;\n"
     "layout(location = 1) in vec4 color;\n"
 
-    "uniform mat4 modelMatrix;\n"
-    "uniform mat4 viewMatrix;\n"
-    "uniform mat4 projectionMatrix;\n"
+    "uniform mat4 MVP;\n"
     
     "out vec4 vertColor;\n"
 
     "void main()\n"
     "{\n"
     // TODO: gl_Position must be updated!
-    "  gl_Position = vec4(position, 1.0);\n"
+    "gl_Position = MVP * vec4(position, 1.0);\n"
     // END TODO
     "  vertColor = color;\n"
     "}\n";
@@ -129,9 +127,10 @@ void BasicWidget::initializeGL()
     1.0f, 1.0f, 0.0f,  // Top right vertex position
    -1.0f,  1.0f, 0.0f,  // Top left vertex position
    
-    1.0f, 0.0f, 0.0f, 1.0f, // red
-    0.0f, 1.0f, 0.0f, 1.0f, // green
-    0.0f, 0.0f, 1.0f, 1.0f // blue
+   1.0f, 0.0f, 0.0f, 1.0f, // red
+   0.0f, 0.0f, 1.0f, 1.0f, // blue
+   0.0f, 1.0f, 0.0f, 1.0f // green
+    
   };
 
   // Define our indices
@@ -148,16 +147,17 @@ void BasicWidget::initializeGL()
   vbo_.create();
   vbo_.setUsagePattern(QOpenGLBuffer::StaticDraw);
   vbo_.bind();
-  vbo_.allocate(verts, 3 * 4 * 4 * sizeof(GL_FLOAT));
+  
+  float colorSize = 3 * 3 * sizeof(GL_FLOAT);
+  float vertSize = 3 * 4 * sizeof(GL_FLOAT);
+
+  vbo_.allocate(verts, colorSize * vertSize);
   // END TODO
   
-
-  // TODO:  Generate our index buffer  
   ibo_.create();
   ibo_.setUsagePattern(QOpenGLBuffer::StaticDraw);
   ibo_.bind();
-  ibo_.allocate(idx, 4 * sizeof(GL_UNSIGNED_INT));
-  // ENDTODO
+  ibo_.allocate(idx, 3 * sizeof(GL_UNSIGNED_INT));
 
   // Create a VAO to keep track of things for us.
   vao_.create();
@@ -191,8 +191,6 @@ void BasicWidget::initializeGL()
 
   // END TODO
 
-  resizeGL(width(), height());
-
   ibo_.bind();
   // Releae the vao THEN the vbo
   vao_.release();
@@ -217,7 +215,7 @@ void BasicWidget::resizeGL(int w, int h)
   );
 
 
-  QMatrix4x4 mvp = projection_ * view_ * model_;
+  mvp = projection_ * view_ * model_;
   // END TODO
 }
 
@@ -230,6 +228,7 @@ void BasicWidget::paintGL()
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   shaderProgram_.bind();
+  shaderProgram_.setUniformValue(shaderProgram_.uniformLocation("MVP"), mvp);
   vao_.bind();
   glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
   vao_.release();
