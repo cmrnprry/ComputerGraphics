@@ -20,6 +20,8 @@ private:
   QMatrix4x4 model_;
   QMatrix4x4 view_;
   QMatrix4x4 projection_;
+  QMatrix4x4 mvp;
+
   
 protected:
   // Required interaction overrides
@@ -32,9 +34,6 @@ protected:
 
   QOpenGLBuffer vbo_;
   QOpenGLBuffer ibo_;
-  // TODO:  Remove the cbo_!
-  QOpenGLBuffer cbo_;
-  // END TODO
   QOpenGLShaderProgram shaderProgram_;
   QOpenGLDebugLogger logger_;
   

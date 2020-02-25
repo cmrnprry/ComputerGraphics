@@ -1,8 +1,9 @@
 #include "BasicWidget.h"
 
+
 //////////////////////////////////////////////////////////////////////
 // Publics
-BasicWidget::BasicWidget(QWidget* parent) : QOpenGLWidget(parent), vbo_(QOpenGLBuffer::VertexBuffer), cbo_(QOpenGLBuffer::VertexBuffer), ibo_(QOpenGLBuffer::IndexBuffer), logger_(this)
+BasicWidget::BasicWidget(QWidget* parent) : QOpenGLWidget(parent), vbo_(QOpenGLBuffer::VertexBuffer), ibo_(QOpenGLBuffer::IndexBuffer), logger_(this)
 {
   setFocusPolicy(Qt::StrongFocus);
 }
@@ -11,10 +12,6 @@ BasicWidget::~BasicWidget()
 {
   vbo_.release();
   vbo_.destroy();
-  // TODO: Remove the CBO
-  cbo_.release();
-  cbo_.destroy();
-  // End TODO
   ibo_.release();
   ibo_.destroy();
   vao_.release();
@@ -30,16 +27,14 @@ QString BasicWidget::vertexShaderString() const
     "layout(location = 0) in vec3 position;\n"
     "layout(location = 1) in vec4 color;\n"
 
-    "uniform mat4 modelMatrix;\n"
-    "uniform mat4 viewMatrix;\n"
-    "uniform mat4 projectionMatrix;\n"
+    "uniform mat4 MVP;\n"
     
     "out vec4 vertColor;\n"
 
     "void main()\n"
     "{\n"
     // TODO: gl_Position must be updated!
-    "  gl_Position = vec4(position, 1.0);\n"
+    "gl_Position = MVP * vec4(position, 1.0);\n"
     // END TODO
     "  vertColor = color;\n"
     "}\n";
@@ -126,19 +121,18 @@ void BasicWidget::initializeGL()
   createShader();
 
   // Define our verts
-  static const GLfloat verts[9] =
+  static const GLfloat verts[21] =
   {
     0.0f, 0.0f, 0.0f, // Center vertex position
     1.0f, 1.0f, 0.0f,  // Top right vertex position
-    -1.0f,  1.0f, 0.0f  // Top left vertex position
+   -1.0f,  1.0f, 0.0f,  // Top left vertex position
+   
+   1.0f, 0.0f, 0.0f, 1.0f, // red
+   0.0f, 0.0f, 1.0f, 1.0f, // blue
+   0.0f, 1.0f, 0.0f, 1.0f // green
+    
   };
-  // Define our vert colors
-  static const GLfloat colors[12] =
-  {
-      1.0f, 0.0f, 0.0f, 1.0f, // red
-      0.0f, 1.0f, 0.0f, 1.0f, // green
-      0.0f, 0.0f, 1.0f, 1.0f // blue
-  };
+
   // Define our indices
   static const GLuint idx[3] =
   {
@@ -153,22 +147,17 @@ void BasicWidget::initializeGL()
   vbo_.create();
   vbo_.setUsagePattern(QOpenGLBuffer::StaticDraw);
   vbo_.bind();
-  vbo_.allocate(verts, 3 * 3 * sizeof(GL_FLOAT));
+  
+  float colorSize = 3 * 3 * sizeof(GL_FLOAT);
+  float vertSize = 3 * 4 * sizeof(GL_FLOAT);
+
+  vbo_.allocate(verts, colorSize * vertSize);
   // END TODO
   
-  // TODO:  Remove the cbo_
-  cbo_.create();
-  cbo_.setUsagePattern(QOpenGLBuffer::StaticDraw);
-  cbo_.bind();
-  cbo_.allocate(colors, 3 * 4 * sizeof(GL_FLOAT));
-  // END TODO
-
-  // TODO:  Generate our index buffer
   ibo_.create();
   ibo_.setUsagePattern(QOpenGLBuffer::StaticDraw);
   ibo_.bind();
   ibo_.allocate(idx, 3 * sizeof(GL_UNSIGNED_INT));
-  // ENDTODO
 
   // Create a VAO to keep track of things for us.
   vao_.create();
@@ -177,11 +166,29 @@ void BasicWidget::initializeGL()
   // TODO:  Enable the attribute arrays for position and color
   // Note:  Remember that Offset and Stride are expressed in terms
   //        of bytes!
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0,
+      3,
+      GL_FLOAT,
+      GL_FALSE,
+      sizeof(GL_FLOAT) * 6,
+      0
+  );
   shaderProgram_.enableAttributeArray(0);
   shaderProgram_.setAttributeBuffer(0, GL_FLOAT, 0, 3);
-  cbo_.bind();
+
+  glEnableVertexAttribArray(1);
+  glVertexAttribPointer(1,
+      4,
+      GL_FLOAT,
+      GL_FALSE,
+      sizeof(GL_FLOAT) * 6,
+      (GLvoid*)(3 * sizeof(GL_FLOAT))
+  );
+
   shaderProgram_.enableAttributeArray(1);
   shaderProgram_.setAttributeBuffer(1, GL_FLOAT, 0, 4);
+
   // END TODO
 
   ibo_.bind();
@@ -189,13 +196,26 @@ void BasicWidget::initializeGL()
   vao_.release();
   shaderProgram_.release();
 
+
+
   glViewport(0, 0, width(), height());
 }
 
 void BasicWidget::resizeGL(int w, int h)
 {
   glViewport(0, 0, w, h);
+
   // TODO:  Set up the model, view, and projection matrices
+  projection_.perspective(45.0f, (float)width() / (float)height(), 0.1f, 100.0f);
+  
+  view_.lookAt(
+      QVector3D(4, 3, 3), // Camera is at (4,3,3), in World Space
+      QVector3D(0, 0, 0), // and looks at the origin
+      QVector3D(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
+  );
+
+
+  mvp = projection_ * view_ * model_;
   // END TODO
 }
 
@@ -208,6 +228,7 @@ void BasicWidget::paintGL()
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   shaderProgram_.bind();
+  shaderProgram_.setUniformValue(shaderProgram_.uniformLocation("MVP"), mvp);
   vao_.bind();
   glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
   vao_.release();
