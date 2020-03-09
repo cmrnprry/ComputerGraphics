@@ -38,10 +38,12 @@ void BasicWidget::initializeGL()
   initializeOpenGLFunctions();
 
   qDebug() << QDir::currentPath();
-  QString texFile = "../../cat3.ppm";
+  QString texFile = "../../boba_1.ppm";
+  QString texFile2 = "../../boba_2.ppm";
   QVector<QVector3D> pos;
   QVector<QVector3D> norm;
   QVector<QVector2D> texCoord;
+  QMatrix4x4 m;
   QVector<unsigned int> idx;
   pos << QVector3D(-0.8, -0.8, 0.0);
   pos << QVector3D(0.8, -0.8, 0.0);
@@ -52,7 +54,7 @@ void BasicWidget::initializeGL()
   norm << QVector3D(0.0, 0.0, 1.0);
   norm << QVector3D(0.0, 0.0, 1.0);
   norm << QVector3D(0.0, 0.0, 1.0);
-  // TODO:  Make sure to add texture coordinates to pass into the initialization of our renderable
+
   texCoord << QVector2D(-1.0, -1.0);
   texCoord << QVector2D(1.0, -1.0);
   texCoord << QVector2D(-1.0, 1.0);
@@ -63,6 +65,14 @@ void BasicWidget::initializeGL()
   Renderable* ren = new Renderable();
   ren->init(pos, norm, texCoord, idx, texFile);
   renderables_.push_back(ren);
+
+
+  Renderable* ren2 = new Renderable();
+  ren2->init(pos, norm, texCoord, idx, texFile2);
+  m.translate(pos[0]);
+  ren2->setModelMatrix(m);
+  renderables_.push_back(ren2);
+
   glViewport(0, 0, width(), height());
   frameTimer_.start();
 }
