@@ -166,28 +166,28 @@ void BasicWidget::initializeGL()
   // TODO:  Enable the attribute arrays for position and color
   // Note:  Remember that Offset and Stride are expressed in terms
   //        of bytes!
-  glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0,
-      3,
-      GL_FLOAT,
-      GL_FALSE,
-      sizeof(GL_FLOAT) * 6,
-      0
-  );
+  //glEnableVertexAttribArray(0);
+  //glVertexAttribPointer(0,
+  //    3,
+  //    GL_FLOAT,
+  //    GL_FALSE,
+  //    sizeof(GL_FLOAT) * 7,
+  //    0
+  //);
   shaderProgram_.enableAttributeArray(0);
-  shaderProgram_.setAttributeBuffer(0, GL_FLOAT, 0, 3);
+  shaderProgram_.setAttributeBuffer(0, GL_FLOAT, 0, 3, 0);
 
-  glEnableVertexAttribArray(1);
-  glVertexAttribPointer(1,
-      4,
-      GL_FLOAT,
-      GL_FALSE,
-      sizeof(GL_FLOAT) * 6,
-      (GLvoid*)(3 * sizeof(GL_FLOAT))
-  );
+  //glEnableVertexAttribArray(1);
+  //glVertexAttribPointer(1,
+  //    4,
+  //    GL_FLOAT,
+  //    GL_FALSE,
+  //    sizeof(GL_FLOAT) * 7,
+  //    (GLvoid*)(3 * sizeof(GL_FLOAT))
+  //);
 
   shaderProgram_.enableAttributeArray(1);
-  shaderProgram_.setAttributeBuffer(1, GL_FLOAT, 0, 4);
+  shaderProgram_.setAttributeBuffer(1, GL_FLOAT, 3 * 3 * sizeof(GL_FLOAT), 4, 0);
 
   // END TODO
 
@@ -208,8 +208,14 @@ void BasicWidget::resizeGL(int w, int h)
   // TODO:  Set up the model, view, and projection matrices
   projection_.perspective(45.0f, (float)width() / (float)height(), 0.1f, 100.0f);
   
-  view_.lookAt(
+  /*view_.lookAt(
       QVector3D(4, 3, 3), // Camera is at (4,3,3), in World Space
+      QVector3D(0, 0, 0), // and looks at the origin
+      QVector3D(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
+  );*/
+
+  view_.lookAt(
+      QVector3D(0, 0, 3), // Camera is at (4,3,3), in World Space
       QVector3D(0, 0, 0), // and looks at the origin
       QVector3D(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
   );
