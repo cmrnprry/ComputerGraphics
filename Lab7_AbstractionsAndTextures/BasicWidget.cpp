@@ -55,9 +55,9 @@ void BasicWidget::initializeGL()
   norm << QVector3D(0.0, 0.0, 1.0);
   norm << QVector3D(0.0, 0.0, 1.0);
 
-  texCoord << QVector2D(-1.0, -1.0);
-  texCoord << QVector2D(1.0, -1.0);
-  texCoord << QVector2D(-1.0, 1.0);
+  texCoord << QVector2D(0, 0);
+  texCoord << QVector2D(1.0, 0);
+  texCoord << QVector2D(0, 1.0);
   texCoord << QVector2D(1.0, 1.0);
 
   idx << 0 << 1 << 2 << 2 << 1 << 3;
