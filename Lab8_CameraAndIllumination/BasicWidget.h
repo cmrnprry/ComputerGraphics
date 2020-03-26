@@ -3,6 +3,7 @@
 #include <QtGui>
 #include <QtWidgets>
 #include <QtOpenGL>
+#include <iostream>
 
 #include "Renderable.h"
 #include "Camera.h"

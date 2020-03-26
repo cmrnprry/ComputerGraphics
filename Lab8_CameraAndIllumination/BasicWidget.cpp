@@ -58,11 +58,15 @@ void BasicWidget::mouseMoveEvent(QMouseEvent* mouseEvent)
     return;
   }
   QPoint delta = mouseEvent->pos() - lastMouseLoc_;
+  QVector3D zoomTo (camera_.position().x(), camera_.position().y(), (float)delta.x() + camera_.position().z());
+  QVector3D moveTo(camera_.position().x(), (float)delta.y() + camera_.position().y(), camera_.position().z());
   lastMouseLoc_ = mouseEvent->pos();
   if (mouseAction_ == Rotate) {
     // TODO:  Implement rotating the camera
+      camera_.translateCamera(moveTo);
   } else if (mouseAction_ == Zoom) {
     // TODO:  Implement zoom by moving the camera
+      camera_.translateCamera(zoomTo);
     // Zooming is moving along the gaze direction by some amount.
   } 
   update();
