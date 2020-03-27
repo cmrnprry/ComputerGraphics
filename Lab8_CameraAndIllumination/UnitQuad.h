@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Renderable.h"
+#include <iostream>
 
 class UnitQuad : public Renderable
 {

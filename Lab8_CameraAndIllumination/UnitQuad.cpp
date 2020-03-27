@@ -42,13 +42,15 @@ void UnitQuad::update(const qint64 msSinceLastFrame)
     rot.setToIdentity();
     rot.rotate(angle, 0.0, 1.0, 0.0);
     QVector3D newPos = rot * lightPos_;
+    QVector3D spotPos = QVector3D(0.5, 0.5, -2);
+
     lightPos_ = newPos;
     // Because we aren't doing any occlusion, the lighting on the walls looks
     // super wonky.  Instead, just move the light on the z axis.
     newPos.setX(0.5);
     // TODO:  Understand how the light gets initialized/setup.
     shader_.bind();
-    shader_.setUniformValue("pointLights[0].color", 1.0f, 0.0f, 0.0f);
+    shader_.setUniformValue("pointLights[0].color", 1.0f, 0.0f, 1.0f);
     shader_.setUniformValue("pointLights[0].position", newPos);
     shader_.setUniformValue("pointLights[0].ambientIntensity", 0.5f);
     shader_.setUniformValue("pointLights[0].specularStrength", 0.5f);
@@ -56,16 +58,16 @@ void UnitQuad::update(const qint64 msSinceLastFrame)
     shader_.setUniformValue("pointLights[0].linear", 0.09f);
     shader_.setUniformValue("pointLights[0].quadratic", 0.032f);
 
-    shader_.setUniformValue("pointLights[1].color", 1.0f, 1.0f, 0.0f);
-    shader_.setUniformValue("pointLights[1].position", newPos);
+    shader_.setUniformValue("pointLights[1].color", 0.1f, 0.5f, 0.1f);
+    shader_.setUniformValue("pointLights[1].position", spotPos);
     shader_.setUniformValue("pointLights[1].ambientIntensity", 0.5f);
     shader_.setUniformValue("pointLights[1].specularStrength", 0.5f);
     shader_.setUniformValue("pointLights[1].constant", 1.0f);
     shader_.setUniformValue("pointLights[1].linear", 0.09f);
     shader_.setUniformValue("pointLights[1].quadratic", 0.032f);
 
-    shader_.setUniformValue("pointLights[2].color", 1.0f, 0.0f, 1.0f);
-    shader_.setUniformValue("pointLights[2].position", newPos);
+    shader_.setUniformValue("pointLights[2].color", 1.0f, 1.0f, 0.0f);
+    shader_.setUniformValue("pointLights[2].position", newPos * -1);
     shader_.setUniformValue("pointLights[2].ambientIntensity", 0.5f);
     shader_.setUniformValue("pointLights[2].specularStrength", 0.5f);
     shader_.setUniformValue("pointLights[2].constant", 1.0f);
