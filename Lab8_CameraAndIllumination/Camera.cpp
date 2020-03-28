@@ -31,6 +31,11 @@ void Camera::translateCamera(const QVector3D& delta)
 	setPosition(delta);
 }
 
+void Camera::zoomCamera(float x, float y)
+{
+
+}
+
 void Camera::rotateCamera(float yaw, float pitch)
 {
 	QVector3D upVector, rightVector, cameraDir, focusPoint, focusVector;
