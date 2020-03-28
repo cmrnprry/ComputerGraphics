@@ -16,10 +16,12 @@
 ## Modify this section
 
 - How many hours did it take you to complete this lab?
+	 ~2
 - Did you collaborate with any other students/TAs/Professors?
+	talked about it with Andrew Knowlmyer
 - Did you use any external resources? (Cite them below)
-  - tbd
-  - tbd
+  - https://gamedev.stackexchange.com/questions/20758/how-can-i-orbit-a-camera-about-its-target-point
+  - learn opengl site (for lighting)
 - (Optional) What was your favorite part of the lab?
 - (Optional) How would you improve the lab?
 
