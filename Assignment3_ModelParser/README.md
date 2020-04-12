@@ -2,16 +2,22 @@
 
 <img align="right" src="./media/bunnyWireframe.png" alt="Stanford Bunny" width="400px"/>
 
-*TODO*: Please edit the following information in your assignment
+
 
 * Name and partners name(At most 1 partner for this Assignment): 
-	Jamie Camera and Cameron Perry
+
+Jamie Camera and Cameron Perry
+
 * How many hours did it take you to complete this Assignment? 
-	6
+
+10 (We lost our code for so long :( )
+
 * Did you collaborate or share ideas with any other students/TAs/Professors? 
+
+Yes, Will Bridges
+
 * Did you use any external resources? 
-  * http://www.opengl-tutorial.org/beginners-tutorials/tutorial-7-model-loading/#reading-	the-file
-  * Lab 05 
+  Yes, we heavily relied on http://www.opengl-tutorial.org/beginners-tutorials/tutorial-7-model-loading/#reading-  to help
 * (Optional) What was the most interesting part of the assignment? How would you improve this assignment?
   
 ## Description
