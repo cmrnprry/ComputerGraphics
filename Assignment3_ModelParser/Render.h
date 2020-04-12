@@ -11,7 +11,7 @@
 #include <stdlib.h>
 
 //A class to parse .obj files for rendering.
-class ModelParser {
+class Render {
 
 private:
 	QVector<GLuint> indices;
@@ -19,13 +19,12 @@ private:
 	QVector<GLfloat> normals;
 
 public:
-	ModelParser() = default;
-	ModelParser(std::string filename);
+	Render() = default;
+	Render(std::string filename);
 
 	//getter functions allow the Widget to add the vertices and faces to the buffer
-	QVector<GLuint> getIndices();
-	QVector<GLfloat> getVertices();
+	QVector<GLuint> getIndx();
+	QVector<GLfloat> getVerts();
 	QVector<GLfloat> getNormals();
 };
-
 #endif

@@ -1,13 +1,13 @@
-#include "ModelParser.h"
+#include "Render.h"
 #include <QtGui>
 #include <QtWidgets>
 #include <QtOpenGL>
 
-ModelParser::ModelParser(std::string filename) {
+Render::Render(std::string filename) {
 	std::ifstream file(filename);
 
 	if (!file) {
-		std::cout << "Error opening " << filename << std::endl;
+		std::cout << "Couldn't open " << filename << std::endl;
 	}
 
 	std::string line;
@@ -16,26 +16,29 @@ ModelParser::ModelParser(std::string filename) {
 		std::stringstream linestr(line);
 		std::string next;
 		linestr >> next;
+
 		if (next == "v") {
 			//Gather the vertices into a vector
-			GLfloat x, y, z;
-			linestr >> x >> y >> z;
+			GLfloat vx, vy, vz;
+			linestr >> vx >> vy >> vz;
+
 			if (!linestr) {
-				std::cout << "Error reading " << filename << " in line: "
+				std::cout << "Couldn't open " << filename << " in line: "
 					<< line << std::endl;
 			}
 			else {
-				vertices.push_back(x);
-				vertices.push_back(y);
-				vertices.push_back(z);
+				vertices.push_back(vx);
+				vertices.push_back(vy);
+				vertices.push_back(vz);
 			}
 		}
 		else if (next == "vn") {
 			//Gather the vertex normals into a vector
 			GLfloat nx, ny, nz;
 			linestr >> nx >> ny >> nz;
+
 			if (!linestr) {
-				std::cout << "Error reading " << filename << " in line: "
+				std::cout << "Couldn't open " << filename << " in line: "
 					<< line << std::endl;
 			}
 			else {
@@ -52,9 +55,9 @@ ModelParser::ModelParser(std::string filename) {
 			char* lineToken;
 			lineToken = std::strtok(lineCStr, "f// ");
 			int i = 1;
+			
 			while (lineToken != NULL) {
 				GLuint curr = std::stoi(lineToken) - 1;
-				//Disregard the normals (for now). We just want vertex indices.
 				if (i % 2 == 1) {
 					indices.push_back(curr);
 				}
@@ -69,14 +72,14 @@ ModelParser::ModelParser(std::string filename) {
 	file.close();
 }
 
-QVector<GLuint> ModelParser::getIndices() {
+QVector<GLuint> Render::getIndx() {
 	return indices;
 }
 
-QVector<GLfloat> ModelParser::getVertices() {
+QVector<GLfloat> Render::getVerts() {
 	return vertices;
 }
 
-QVector<GLfloat> ModelParser::getNormals() {
+QVector<GLfloat> Render::getNormals() {
 	return normals;
 }

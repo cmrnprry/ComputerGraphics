@@ -79,21 +79,22 @@ void BasicWidget::createShader()
 
 void BasicWidget::keyReleaseEvent(QKeyEvent* keyEvent) {
 	// Handle key events here.
-	//switch to the bunny model if 1 is pressed
-	//return fillMode to fill
 	if (keyEvent->key() == Qt::Key_1) {
 		fillMode = GL_FILL;
-		vertices.clear();
-		indices.clear();
+		verts.clear();
+		indx.clear();
 		normals.clear();
 
-		vertices = bunny.getVertices();
-		indices = bunny.getIndices();
+		verts = bunny.getVerts();
+		indx = bunny.getIndx();
 		normals = bunny.getNormals();
+
 		vbo_.bind();
-		vbo_.allocate(vertices.constData(), vertices.size() * sizeof(GL_FLOAT));
+		vbo_.allocate(verts.constData(), verts.size() * sizeof(GL_FLOAT));
+
 		ibo_.bind();
-		ibo_.allocate(indices.constData(), indices.size() * sizeof(GL_UNSIGNED_INT));
+		ibo_.allocate(indx.constData(), indx.size() * sizeof(GL_UNSIGNED_INT));
+		
 		/*
 		nbo_.bind();
 		nbo_.allocate(&vertices[0], normals.size() * sizeof(GL_FLOAT));
@@ -105,17 +106,20 @@ void BasicWidget::keyReleaseEvent(QKeyEvent* keyEvent) {
 	//return fillMode to fill
 	else if (keyEvent->key() == Qt::Key_2) {
 		fillMode = GL_FILL;
-		vertices.clear();
-		indices.clear();
+		verts.clear();
+		indx.clear();
 		normals.clear();
 
-		vertices = monkey.getVertices();
-		indices = monkey.getIndices();
+		verts = monkey.getVerts();
+		indx = monkey.getIndx();
 		normals = monkey.getNormals();
+		
 		vbo_.bind();
-		vbo_.allocate(vertices.constData(), vertices.size() * sizeof(GL_FLOAT));
+		vbo_.allocate(verts.constData(), verts.size() * sizeof(GL_FLOAT));
+		
 		ibo_.bind();
-		ibo_.allocate(indices.constData(), indices.size() * sizeof(GL_UNSIGNED_INT));
+		ibo_.allocate(indx.constData(), indx.size() * sizeof(GL_UNSIGNED_INT));
+		
 		/*
 		nbo_.bind();
 		nbo_.allocate(&vertices[0], normals.size() * sizeof(GL_FLOAT));
@@ -158,10 +162,10 @@ void BasicWidget::initializeGL()
 	createShader();
 	
 	//initialize our models
-	bunny = ModelParser("../../objects/bunny.obj");
-	monkey = ModelParser("../../objects/monkey.obj");
-	indices = bunny.getIndices();
-	vertices = bunny.getVertices();
+	bunny = Render("../../objects/bunny.obj");
+	monkey = Render("../../objects/monkey.obj");
+	indx = bunny.getIndx();
+	verts = bunny.getVerts();
 	normals = bunny.getNormals();
 
 	shaderProgram_.bind();
@@ -170,7 +174,7 @@ void BasicWidget::initializeGL()
 	vbo_.create();
 	vbo_.setUsagePattern(QOpenGLBuffer::StaticDraw);
 	vbo_.bind();
-	vbo_.allocate(vertices.constData(), vertices.size() * sizeof(GL_FLOAT));
+	vbo_.allocate(verts.constData(), verts.size() * sizeof(GL_FLOAT));
 	
 	//set up the normal buffer/
 	/*
@@ -184,7 +188,7 @@ void BasicWidget::initializeGL()
 	ibo_.create();
 	ibo_.setUsagePattern(QOpenGLBuffer::StaticDraw);
 	ibo_.bind();
-	ibo_.allocate(indices.constData(), indices.size() * sizeof(GL_UNSIGNED_INT));
+	ibo_.allocate(indx.constData(), indx.size() * sizeof(GL_UNSIGNED_INT));
 
 	vao_.create();
 	vao_.bind();
@@ -236,7 +240,7 @@ void BasicWidget::paintGL()
 
 	glPolygonMode(GL_FRONT_AND_BACK, fillMode);
 
-	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, indx.size(), GL_UNSIGNED_INT, 0);
 	vao_.release();
 	shaderProgram_.release();
 }

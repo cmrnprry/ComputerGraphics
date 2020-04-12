@@ -3,7 +3,7 @@
 #include <QtGui>
 #include <QtWidgets>
 #include <QtOpenGL>
-#include "ModelParser.h"
+#include "Render.h"
 
 /**
  * This is just a basic OpenGL widget that will allow a change of background color.
@@ -13,10 +13,11 @@ class BasicWidget : public QOpenGLWidget, protected QOpenGLFunctions
   Q_OBJECT
 
 private:
-	ModelParser bunny;
-	ModelParser monkey;
-	QVector<GLuint> indices;
-	QVector<GLfloat> vertices;
+	Render bunny;
+	Render monkey;
+
+	QVector<GLuint> indx;
+	QVector<GLfloat> verts;
 	QVector<GLfloat> normals;
 
 	QOpenGLBuffer vbo_;
