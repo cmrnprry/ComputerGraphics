@@ -1,5 +1,5 @@
-#ifndef MODELPARSER
-#define MODELPARSER
+#ifndef REDNDER
+#define REDNDER
 
 #include <QtGui>
 #include <QtWidgets>

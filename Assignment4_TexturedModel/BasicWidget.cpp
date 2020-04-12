@@ -2,116 +2,220 @@
 
 //////////////////////////////////////////////////////////////////////
 // Publics
-BasicWidget::BasicWidget(QWidget* parent) : QOpenGLWidget(parent), logger_(this)
+BasicWidget::BasicWidget(QWidget* parent) : QOpenGLWidget(parent), vbo_(QOpenGLBuffer::VertexBuffer),
+nbo_(QOpenGLBuffer::VertexBuffer), ibo_(QOpenGLBuffer::IndexBuffer)
 {
-  setFocusPolicy(Qt::StrongFocus);
+	setFocusPolicy(Qt::StrongFocus);
 }
 
 BasicWidget::~BasicWidget()
 {
-    for (auto renderable : renderables_) {
-        delete renderable;
-    }
-    renderables_.clear();
+	vbo_.release();
+	vbo_.destroy();
+	nbo_.release();
+	nbo_.destroy();
+	ibo_.release();
+	ibo_.destroy();
+	vao_.release();
+	vao_.destroy();
 }
 
 //////////////////////////////////////////////////////////////////////
 // Privates
-///////////////////////////////////////////////////////////////////////
-// Protected
-void BasicWidget::keyReleaseEvent(QKeyEvent* keyEvent)
+QString BasicWidget::vertexShaderString() const
 {
-  // Handle key events here.
-  if (keyEvent->key() == Qt::Key_Left) {
-    qDebug() << "Left Arrow Pressed";
-    update();  // We call update after we handle a key press to trigger a redraw when we are ready
-  } else if (keyEvent->key() == Qt::Key_Right) {
-    qDebug() << "Right Arrow Pressed";
-    update();  // We call update after we handle a key press to trigger a redraw when we are ready
-  } else {
-    qDebug() << "You Pressed an unsupported Key!";
-  }
+	QString str =
+		"#version 330\n"
+		"layout(location = 0) in vec3 position;\n"
+		"layout(location = 1) in vec4 color;\n"
+
+		"uniform vec4 wireFrameColor = vec4(1.0, 1.0, 1.0, 1.0);"
+		"uniform mat4 modelMatrix;\n"
+		"uniform mat4 viewMatrix;\n"
+		"uniform mat4 projectionMatrix;\n"
+
+		"out vec4 vertColor;\n"
+
+		"void main()\n"
+		"{\n"
+		"  gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1);\n"
+		"  vertColor = wireFrameColor;\n"
+		"}\n";
+	return str;
 }
+
+QString BasicWidget::fragmentShaderString() const
+{
+	QString str =
+		"#version 330\n"
+		"in vec4 vertColor;\n"
+		"out vec4 color;\n"
+		"void main()\n"
+		"{\n"
+		"  color = vertColor;\n"
+		"}\n";
+	return str;
+}
+
+void BasicWidget::createShader()
+{
+	QOpenGLShader vert(QOpenGLShader::Vertex);
+	vert.compileSourceCode(vertexShaderString());
+	QOpenGLShader frag(QOpenGLShader::Fragment);
+	frag.compileSourceCode(fragmentShaderString());
+	bool ok = shaderProgram_.addShader(&vert);
+	if (!ok) {
+		qDebug() << shaderProgram_.log();
+	}
+	ok = shaderProgram_.addShader(&frag);
+	if (!ok) {
+		qDebug() << shaderProgram_.log();
+	}
+	ok = shaderProgram_.link();
+	if (!ok) {
+		qDebug() << shaderProgram_.log();
+	}
+}
+
+void BasicWidget::keyReleaseEvent(QKeyEvent* keyEvent) {
+	// Handle key events here.
+	if (keyEvent->key() == Qt::Key_1) {
+		fillMode = GL_FILL;
+		verts.clear();
+		indx.clear();
+		normals.clear();
+
+		verts = bunny.getVerts();
+		indx = bunny.getIndx();
+		normals = bunny.getNormals();
+
+		vbo_.bind();
+		vbo_.allocate(verts.constData(), verts.size() * sizeof(GL_FLOAT));
+
+		ibo_.bind();
+		ibo_.allocate(indx.constData(), indx.size() * sizeof(GL_FLOAT));
+		
+		/*
+		nbo_.bind();
+		nbo_.allocate(&vertices[0], normals.size() * sizeof(GL_FLOAT));
+		*/
+		update();
+
+	}
+	//switch the fillMode to wireframe if W is pressed
+	else if (keyEvent->key() == Qt::Key_W) {
+		fillMode = GL_LINE;
+		update();
+	}
+	else if (keyEvent->key() == Qt::Key_Q) {
+		exit(1);
+	}
+	else {
+		qDebug() << "You Pressed an unsupported Key!";
+	}
+}
+
+
 void BasicWidget::initializeGL()
 {
-  makeCurrent();
-  initializeOpenGLFunctions();
+	makeCurrent();
+	initializeOpenGLFunctions();
 
-  qDebug() << QDir::currentPath();
-  QString texFile = "../../boba_1.ppm";
-  QString texFile2 = "../../boba_2.ppm";
-  QVector<QVector3D> pos;
-  QVector<QVector3D> norm;
-  QVector<QVector2D> texCoord;
-  QMatrix4x4 m;
-  QVector<unsigned int> idx;
-  pos << QVector3D(-0.8, -0.8, 0.0);
-  pos << QVector3D(0.8, -0.8, 0.0);
-  pos << QVector3D(-0.8, 0.8, 0.0);
-  pos << QVector3D(0.8, 0.8, 0.0);
-  // We don't actually use the normals right now, but this will be useful later!
-  norm << QVector3D(0.0, 0.0, 1.0);
-  norm << QVector3D(0.0, 0.0, 1.0);
-  norm << QVector3D(0.0, 0.0, 1.0);
-  norm << QVector3D(0.0, 0.0, 1.0);
+	model_.setToIdentity();
+	view_.setToIdentity();
+	projection_.setToIdentity();
 
-  texCoord << QVector2D(0, 0);
-  texCoord << QVector2D(1.0, 0);
-  texCoord << QVector2D(0, 1.0);
-  texCoord << QVector2D(1.0, 1.0);
+	QOpenGLContext* curContext = this->context();
+	qDebug() << "[BasicWidget]::initializeGL() -- Context Information:";
+	qDebug() << "  Context Valid: " << std::string(curContext->isValid() ? "true" : "false").c_str();
+	qDebug() << "  GL Version Used: " << curContext->format().majorVersion() << "." << curContext->format().minorVersion();
+	qDebug() << "  Vendor: " << reinterpret_cast<const char*>(glGetString(GL_VENDOR));
+	qDebug() << "  Renderer: " << reinterpret_cast<const char*>(glGetString(GL_RENDERER));
+	qDebug() << "  Version: " << reinterpret_cast<const char*>(glGetString(GL_VERSION));
+	qDebug() << "  GLSL Version: " << reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION));
 
-  idx << 0 << 1 << 2 << 2 << 1 << 3;
+	createShader();
+	
+	//initialize our models
+	bunny = Render("../../../objects/house/house_obj.obj");
+	indx = bunny.getIndx();
+	verts = bunny.getVerts();
+	normals = bunny.getNormals();
 
-  Renderable* ren = new Renderable();
-  ren->init(pos, norm, texCoord, idx, texFile);
-  renderables_.push_back(ren);
+	shaderProgram_.bind();
 
+	//set up the vertex buffer
+	vbo_.create();
+	vbo_.setUsagePattern(QOpenGLBuffer::StaticDraw);
+	vbo_.bind();
+	vbo_.allocate(verts.constData(), verts.size() * sizeof(GL_FLOAT));
+	
+	//set up the normal buffer/
+	/*
+	nbo_.create();
+	nbo_.setUsagePattern(QOpenGLBuffer::StaticDraw);
+	nbo_.bind();
+	nbo_.allocate(normals.constData(), normals.size() * sizeof(GL_FLOAT));
+	*/
 
-  Renderable* ren2 = new Renderable();
-  ren2->init(pos, norm, texCoord, idx, texFile2);
-  m.translate(pos[0]);
-  ren2->setModelMatrix(m);
-  renderables_.push_back(ren2);
+	//set up the index buffer
+	ibo_.create();
+	ibo_.setUsagePattern(QOpenGLBuffer::StaticDraw);
+	ibo_.bind();
+	ibo_.allocate(indx.constData(), indx.size() * sizeof(GL_FLOAT));
 
-  glViewport(0, 0, width(), height());
-  frameTimer_.start();
+	vao_.create();
+	vao_.bind();
+	vbo_.bind();
+	shaderProgram_.enableAttributeArray(0);
+	shaderProgram_.setAttributeBuffer(0, GL_FLOAT, 0, 3, 3 * sizeof(GL_FLOAT));
+
+	ibo_.bind();
+	vao_.release();
+	shaderProgram_.release();
+
+	glViewport(0, 0, width(), height());
+
 }
 
 void BasicWidget::resizeGL(int w, int h)
 {
-    if (!logger_.isLogging()) {
-        logger_.initialize();
-        // Setup the logger for real-time messaging
-        connect(&logger_, &QOpenGLDebugLogger::messageLogged, [=]() {
-            const QList<QOpenGLDebugMessage> messages = logger_.loggedMessages();
-            for (auto msg : messages) {
-                qDebug() << msg;
-            }
-            });
-        logger_.startLogging();
-    }
-  glViewport(0, 0, w, h);
-  view_.setToIdentity();
-  view_.lookAt(QVector3D(0.0f, 0.0f, 2.0f),
-      QVector3D(0.0f, 0.0f, 0.0f),
-      QVector3D(0.0f, 1.0f, 0.0f));
-  projection_.setToIdentity();
-  projection_.perspective(70.f, (float)w/(float)h, 0.001, 1000.0);
-  glViewport(0, 0, w, h);
+	glViewport(0, 0, w, h);
+	model_ = QMatrix4x4(
+		1, 0, 0, 0,
+		0, 1, 0, 0,
+		0, 0, 1, 0,
+		0, 0, 0, 1);
+
+	view_.lookAt(QVector3D(1, 0.5f, 3),
+		QVector3D(0, 0.5f, 0),
+		QVector3D(0, 1, 0)
+	);
+
+	projection_.perspective(45.0f, (float)w/h, 0.1f, 100.0f);
+	shaderProgram_.bind();
+	shaderProgram_.setUniformValue("modelMatrix", model_);
+	shaderProgram_.setUniformValue("viewMatrix", view_);
+	shaderProgram_.setUniformValue("projectionMatrix", projection_);
+	shaderProgram_.release();
 }
 
 void BasicWidget::paintGL()
 {
-  qint64 msSinceRestart = frameTimer_.restart();
-  glDisable(GL_DEPTH_TEST);
-  glDisable(GL_CULL_FACE);
 
-  glClearColor(0.f, 0.f, 0.f, 1.f);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_CULL_FACE);
 
-  for (auto renderable : renderables_) {
-      renderable->update(msSinceRestart);
-      renderable->draw(view_, projection_);
-  }
-  update();
+	glClearColor(0.f, 0.f, 0.f, 0.f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	shaderProgram_.bind();
+	vao_.bind();
+
+	glPolygonMode(GL_FRONT_AND_BACK, fillMode);
+
+	//glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
+	glDrawElements(GL_TRIANGLES, indx.size(), GL_UNSIGNED_INT, 0);
+	vao_.release();
+	shaderProgram_.release();
 }
