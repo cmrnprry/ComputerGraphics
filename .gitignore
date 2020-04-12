@@ -3,13 +3,19 @@ Assignment4_TexturedModel/out/*
 Assignment4_TexturedModel/src/.vs/*
 Assignment4_TexturedModel/.vs/*
 
+Lab9_Heightfields/Build/*
+Lab9_Heightfields/out/*
+Lab9_Heightfields/src/.vs/*
+Lab9_Heightfields/.vs/*
+
+
 Lab8_CameraAndIllumination/Builds/*
 Lab8_CameraAndIllumination/out/*
 Lab6_ColorAndTransforms/Build/*
 Lab6_ColorAndTransforms/out/*
 Lab7_AbstractionsAndTextures/Builds/*
 Lab7_AbstractionsAndTextures/out/*
-Assignment3_ModelParser/Build/*
+Assignment3_ModelParser/Builds/*
 Lab4_MatrixTransformations/Build/*
 Lab4_MatrixTransformations/out/*
 Lab5_Part1/Build/*
