@@ -13,10 +13,10 @@
 
 //A struct to hold our data for the indicies
 struct IndexData {
-    float x, y, z;
-    float s, t;
+    unsigned int x, y, z;
+    unsigned int s, t;
 
-    IndexData(float _x, float _y, float _z, float _s, float _t) : x(_x), y(_y), z(_z), s(_s), t(_t) { }
+    IndexData(unsigned int _x, unsigned int _y, unsigned int _z, unsigned int _s, unsigned int _t) : x(_x), y(_y), z(_z), s(_s), t(_t) { }
 
     // Tests if two VertexData are equal
     bool operator== (const IndexData& rhs) {
@@ -32,21 +32,20 @@ class Render {
 
 private:
     QVector<IndexData> indxData;
-    QVector<GLfloat> indices;
-    QVector<GLfloat> vertices;
-    QVector<GLfloat> textures;
-    QVector<GLfloat> normals;
+    QVector<unsigned int> indices;
+    QVector<QVector3D> vertices;
+    QVector<QVector2D> textures;
+    QVector<QVector3D> normals;
     std::string mLib;
 public:
     Render() = default;
     Render(std::string filename);
 
     //getter functions allow the Widget to add the vertices and faces to the buffer
-    QVector<GLfloat> getIndx();
-   // QVector<GLfloat> getIndx();
-    QVector<GLfloat> getVerts();
-    QVector<GLfloat> getTexs();
-    QVector<GLfloat> getNormals();
+    QVector<unsigned int> getIndx();
+    QVector<QVector3D> getVerts();
+    QVector<QVector2D> getTexs();
+    QVector<QVector3D> getNormals();
     IndexData createFace(char* data);
     void ProcessData();
 

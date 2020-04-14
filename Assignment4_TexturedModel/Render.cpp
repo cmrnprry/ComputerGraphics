@@ -28,9 +28,8 @@ Render::Render(std::string filename) {
 					<< line << std::endl;
 			}
 			else {
-				vertices.push_back(vx);
-				vertices.push_back(vy);
-				vertices.push_back(vz);
+				QVector3D pos(vx, vy, vz);
+				vertices.push_back(pos);
 			}
 		}
 		if (next == "vt") {
@@ -43,8 +42,8 @@ Render::Render(std::string filename) {
 					<< line << std::endl;
 			}
 			else {
-				textures.push_back(vtx);
-				textures.push_back(vty);
+				QVector2D tex(vtx, vty);
+				textures.push_back(tex);
 			}
 		}
 		else if (next == "vn") {
@@ -57,9 +56,8 @@ Render::Render(std::string filename) {
 					<< line << std::endl;
 			}
 			else {
-				normals.push_back(nx);
-				normals.push_back(ny);
-				normals.push_back(nz);
+				QVector3D pos(nx, ny, nz);
+				normals.push_back(pos);
 			}
 		}
 		else if (next == "f") {
@@ -86,8 +84,6 @@ Render::Render(std::string filename) {
 					if (!inIndex) {
 						indxData.push_back(curr);
 						indices.push_back(curr.x);
-						indices.push_back(curr.y);
-						indices.push_back(curr.z);
 					}
 
 				}
@@ -112,6 +108,11 @@ Render::Render(std::string filename) {
 		}
 	}
 
+	ProcessData();
+	std::cout << "vn size: " << normals.size() << std::endl;
+	std::cout << "vt size: " << textures.size() << std::endl;
+	std::cout << "v size: " << vertices.size() << std::endl;
+
 	file.close();
 }
 
@@ -120,31 +121,60 @@ IndexData Render::createFace(char* data) {
 	std::string lineToken;
 
 	lineToken = str.substr(0, str.find("/"));
-	float x = stof(lineToken);
-	float y = stof(lineToken);
-	float z = stof(lineToken);
+	unsigned int x = stoi(lineToken);
+	unsigned int y = stoi(lineToken);
+	unsigned int z = stoi(lineToken);
 
 	lineToken = str.substr(str.find("/") + 1, str.find("/"));
-	float s = stof(lineToken);
-	float t = stof(lineToken);
+	unsigned int s = stoi(lineToken);
+	unsigned int t = stoi(lineToken);
 
 	IndexData newData(x, y, z, s, t);
 	return newData;
 }
 
-QVector<GLfloat> Render::getIndx() {
+void Render::ProcessData()
+{
+	float j, k;
+	QVector3D pos, norm;
+	QVector2D tex;
+
+	QVector<QVector3D> temp_vertices, temp_normals;
+	QVector<QVector2D> temp_textures;
+
+	for (int i = 0; i < indxData.size(); i++)
+	{
+		IndexData data = indxData[i];
+		j = data.x;
+		k = data.s;
+		
+		pos = vertices[j - 1];
+		norm = vertices[j - 1];
+		tex = textures[k - 1];
+
+		temp_vertices.push_back(pos);
+		temp_normals.push_back(norm);
+		temp_textures.push_back(tex);
+	}
+
+	vertices = temp_vertices;
+	normals = temp_normals;
+	textures = temp_textures;
+}
+
+QVector<unsigned int> Render::getIndx() {
 	return indices;
 }
 
-QVector<GLfloat> Render::getVerts() {
+QVector<QVector3D> Render::getVerts() {
 	return vertices;
 }
 
-QVector<GLfloat> Render::getTexs() {
+QVector<QVector2D> Render::getTexs() {
 	return textures;
 }
 
-QVector<GLfloat> Render::getNormals() {
+QVector<QVector3D> Render::getNormals() {
 	return normals;
 }
 
