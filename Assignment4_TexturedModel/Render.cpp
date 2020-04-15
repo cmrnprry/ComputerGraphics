@@ -56,8 +56,8 @@ Render::Render(std::string filename) {
 					<< line << std::endl;
 			}
 			else {
-				QVector3D pos(nx, ny, nz);
-				normals.push_back(pos);
+				QVector3D norm(nx, ny, nz);
+				normals.push_back(norm);
 			}
 		}
 		else if (next == "f") {
@@ -83,7 +83,7 @@ Render::Render(std::string filename) {
 					}
 					if (!inIndex) {
 						indxData.push_back(curr);
-						indices.push_back(curr.x);
+						indices.push_back(curr.vIndx);
 					}
 
 				}
@@ -109,33 +109,33 @@ Render::Render(std::string filename) {
 	}
 
 	ProcessData();
-	std::cout << "vn size: " << normals.size() << std::endl;
-	std::cout << "vt size: " << textures.size() << std::endl;
-	std::cout << "v size: " << vertices.size() << std::endl;
 
 	file.close();
 }
 
 IndexData Render::createFace(char* data) {
-	std::string str(data);
+	std::string str(data); //str is in format: #/#/#
 	std::string lineToken;
+	std::size_t foundAt;
 
 	lineToken = str.substr(0, str.find("/"));
-	unsigned int x = stoi(lineToken);
-	unsigned int y = stoi(lineToken);
-	unsigned int z = stoi(lineToken);
+	foundAt = str.find("/");
+	unsigned int vIndx = stoi(lineToken);
 
 	lineToken = str.substr(str.find("/") + 1, str.find("/"));
-	unsigned int s = stoi(lineToken);
-	unsigned int t = stoi(lineToken);
+	unsigned int vtIndx = stoi(lineToken);
+	foundAt = str.find("/", foundAt + 1);
 
-	IndexData newData(x, y, z, s, t);
+	lineToken = str.substr(foundAt + 1, str.find("/"));
+	unsigned int normIndx = stoi(lineToken);
+
+
+	IndexData newData(vIndx, vtIndx, normIndx);
 	return newData;
 }
 
 void Render::ProcessData()
 {
-	float j, k;
 	QVector3D pos, norm;
 	QVector2D tex;
 
@@ -145,16 +145,15 @@ void Render::ProcessData()
 	for (int i = 0; i < indxData.size(); i++)
 	{
 		IndexData data = indxData[i];
-		j = data.x;
-		k = data.s;
 		
-		pos = vertices[j - 1];
-		norm = vertices[j - 1];
-		tex = textures[k - 1];
+		pos = vertices[data.vIndx - 1];
+		norm = vertices[data.normIndx - 1];
+		tex = textures[data.vtIndx - 1];
 
 		temp_vertices.push_back(pos);
 		temp_normals.push_back(norm);
 		temp_textures.push_back(tex);
+		
 	}
 
 	vertices = temp_vertices;

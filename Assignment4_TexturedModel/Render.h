@@ -13,14 +13,13 @@
 
 //A struct to hold our data for the indicies
 struct IndexData {
-    unsigned int x, y, z;
-    unsigned int s, t;
+    unsigned int vIndx, vtIndx, normIndx;
 
-    IndexData(unsigned int _x, unsigned int _y, unsigned int _z, unsigned int _s, unsigned int _t) : x(_x), y(_y), z(_z), s(_s), t(_t) { }
+    IndexData(unsigned int _vIndx, unsigned int _vtIndx, unsigned int _normIndx) : vIndx(_vIndx), vtIndx(_vtIndx), normIndx(_normIndx) { }
 
     // Tests if two VertexData are equal
     bool operator== (const IndexData& rhs) {
-        if ((x == rhs.x) && (y == rhs.y) && (z == rhs.z) && (s == rhs.s) && (t == rhs.t)) {
+        if ((vIndx == rhs.vIndx) && (vtIndx == rhs.vtIndx) && (normIndx == rhs.normIndx)) {
             return true;
         }
         return false;

@@ -93,7 +93,7 @@ void Renderable::init(const QVector<QVector3D>& positions, const QVector<QVector
 		data[i * vertexSize_ + 3] = texCoords.at(i).x();
 		data[i * vertexSize_ + 4] = texCoords.at(i).y();
 	}
-	vbo_.allocate(data, numVBOEntries * sizeof(float));
+	vbo_.allocate(data, numVBOEntries * sizeof(GL_FLOAT));
 	delete[] data;
 
 	// Create our index buffer
@@ -110,9 +110,9 @@ void Renderable::init(const QVector<QVector3D>& positions, const QVector<QVector
 
 	// Make sure we setup our shader inputs properly
 	shader_.enableAttributeArray(0);
-	shader_.setAttributeBuffer(0, GL_FLOAT, 0, 3, vertexSize_ * sizeof(float));
+	shader_.setAttributeBuffer(0, GL_FLOAT, 0, 3, vertexSize_ * sizeof(GL_FLOAT));
 	shader_.enableAttributeArray(1);
-	shader_.setAttributeBuffer(1, GL_FLOAT, 3 * sizeof(float), 2, vertexSize_ * sizeof(float));
+	shader_.setAttributeBuffer(1, GL_FLOAT, 3 * sizeof(GL_FLOAT), 2, vertexSize_ * sizeof(GL_FLOAT));
 
 	// Release our vao and THEN release our buffers.
 	vao_.release();
