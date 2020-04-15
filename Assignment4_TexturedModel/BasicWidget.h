@@ -25,6 +25,7 @@ private:
     QElapsedTimer frameTimer_;
 
     QVector<Renderable*> renderables_;
+    GLenum fillMode = GL_FILL;
 
     QOpenGLDebugLogger logger_;
 

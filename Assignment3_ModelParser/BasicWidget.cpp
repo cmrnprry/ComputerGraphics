@@ -129,7 +129,14 @@ void BasicWidget::keyReleaseEvent(QKeyEvent* keyEvent) {
 	}
 	//switch the fillMode to wireframe if W is pressed
 	else if (keyEvent->key() == Qt::Key_W) {
-		fillMode = GL_LINE;
+		if (fillMode == GL_LINE)
+		{
+			fillMode = GL_FILL;
+		}
+		else
+		{
+			fillMode = GL_LINE;
+		}
 		update();
 	}
 	else if (keyEvent->key() == Qt::Key_Q) {
