@@ -29,7 +29,7 @@ Render::Render(std::string filename) {
 			}
 			else {
 				QVector3D pos(vx, vy, vz);
-				vertices.push_back(pos);
+				temp_vertices.push_back(pos);
 			}
 		}
 		if (next == "vt") {
@@ -43,7 +43,7 @@ Render::Render(std::string filename) {
 			}
 			else {
 				QVector2D tex(vtx, vty);
-				textures.push_back(tex);
+				temp_textures.push_back(tex);
 			}
 		}
 		else if (next == "vn") {
@@ -57,7 +57,7 @@ Render::Render(std::string filename) {
 			}
 			else {
 				QVector3D norm(nx, ny, nz);
-				normals.push_back(norm);
+				temp_normals.push_back(norm);
 			}
 		}
 		else if (next == "f") {
@@ -83,7 +83,6 @@ Render::Render(std::string filename) {
 					}
 					if (!inIndex) {
 						indxData.push_back(curr);
-						indices.push_back(curr.vIndx);
 					}
 
 				}
@@ -139,26 +138,25 @@ void Render::ProcessData()
 	QVector3D pos, norm;
 	QVector2D tex;
 
-	QVector<QVector3D> temp_vertices, temp_normals;
-	QVector<QVector2D> temp_textures;
+	std::cout << "index data: " << indxData.size() << std::endl;
+	std::cout << "normals data: " << temp_normals.size() << std::endl;
+	std::cout << "vertex data: " << temp_vertices.size() << std::endl;
+	std::cout << "texture data: " << temp_textures.size() << std::endl;
 
 	for (int i = 0; i < indxData.size(); i++)
 	{
 		IndexData data = indxData[i];
 		
-		pos = vertices[data.vIndx - 1];
-		norm = vertices[data.normIndx - 1];
-		tex = textures[data.vtIndx - 1];
+		pos = temp_vertices[data.vIndx - 1];
+		norm = temp_normals[data.normIndx - 1];
+		tex = temp_textures[data.vtIndx - 1];
 
-		temp_vertices.push_back(pos);
-		temp_normals.push_back(norm);
-		temp_textures.push_back(tex);
+		vertices.push_back(pos);
+		normals.push_back(norm);
+		textures.push_back(tex);
+		indices.push_back(i);
 		
 	}
-
-	vertices = temp_vertices;
-	normals = temp_normals;
-	textures = temp_textures;
 }
 
 QVector<unsigned int> Render::getIndx() {

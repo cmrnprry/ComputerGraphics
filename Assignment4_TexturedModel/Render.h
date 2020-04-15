@@ -32,9 +32,11 @@ class Render {
 private:
     QVector<IndexData> indxData;
     QVector<unsigned int> indices;
-    QVector<QVector3D> vertices;
+    QVector<QVector3D> vertices, normals;
     QVector<QVector2D> textures;
-    QVector<QVector3D> normals;
+
+    QVector<QVector3D> temp_vertices, temp_normals;
+    QVector<QVector2D> temp_textures;
     std::string mLib;
 public:
     Render() = default;
