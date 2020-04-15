@@ -122,13 +122,6 @@ void Renderable::init(const QVector<QVector3D>& positions, const QVector<QVector
 
 void Renderable::update(const qint64 msSinceLastFrame)
 {
-	//For this lab, we want our polygon to rotate. 
-	float sec = msSinceLastFrame / 1000.0f;
-	float anglePart = sec * rotationSpeed_ * 360.f;
-	rotationAngle_ += anglePart;
-	while(rotationAngle_ >= 360.0) {
-		rotationAngle_ -= 360.0;
-	}
 }
 
 void Renderable::draw(const QMatrix4x4& view, const QMatrix4x4& projection)
@@ -150,7 +143,7 @@ void Renderable::draw(const QMatrix4x4& view, const QMatrix4x4& projection)
 
 	vao_.bind();
 	texture_.bind();
-	glDrawElements(GL_TRIANGLES, numTris_ * 3, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, numTris_, GL_UNSIGNED_INT, 0);
 	texture_.release();
 	vao_.release();
 	shader_.release();

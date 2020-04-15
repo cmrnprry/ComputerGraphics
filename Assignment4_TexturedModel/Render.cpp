@@ -6,6 +6,7 @@
 
 Render::Render(std::string filename) {
 	std::ifstream file(filename);
+	unsigned int count = 0;
 
 	if (!file) {
 		std::cout << "Couldn't open " << filename << std::endl;
@@ -76,13 +77,18 @@ Render::Render(std::string filename) {
 					//std::cout << "Full length " << lineToken << std::endl;
 					IndexData curr = createFace(lineToken);
 
-					for each (IndexData temp in indxData) {
-						if (temp == curr) {
+					for (int k = 0; k < indxData.size(); k++) {
+						if (indxData[k] == curr) {
 							inIndex = true;
+							indices.push_back(k);
+							break;
 						}
 					}
+
 					if (!inIndex) {
 						indxData.push_back(curr);
+						indices.push_back(count);
+						count++;
 					}
 
 				}
@@ -128,7 +134,6 @@ IndexData Render::createFace(char* data) {
 	lineToken = str.substr(foundAt + 1, str.find("/"));
 	unsigned int normIndx = stoi(lineToken);
 
-
 	IndexData newData(vIndx, vtIndx, normIndx);
 	return newData;
 }
@@ -154,8 +159,6 @@ void Render::ProcessData()
 		vertices.push_back(pos);
 		normals.push_back(norm);
 		textures.push_back(tex);
-		indices.push_back(i);
-		
 	}
 }
 
