@@ -21,7 +21,7 @@ Particle* Emitter::emitParticle()
 	transform.setToIdentity();
 	transform.translate(location_);
 
-	float lifetime = 2.5;
+	float lifetime = 2.5f;
 
 	return new Particle(model_, velocity, transform, lifetime);
 }

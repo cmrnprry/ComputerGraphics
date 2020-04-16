@@ -179,7 +179,7 @@ void Renderable::draw(const QMatrix4x4& view, const QMatrix4x4& projection)
 
 	vao_.bind();
 	texture_.bind();
-	glDrawElements(GL_TRIANGLES, numTris_, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, numTris_ * 3, GL_UNSIGNED_INT, 0);
 	texture_.release();
 	vao_.release();
 	shader_.release();

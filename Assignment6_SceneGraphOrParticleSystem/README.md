@@ -1,44 +1,171 @@
-# Assignment 6
+# Assignment 6 - Particle System
+
+*TODO*: Please edit the following information in your assignment
+
+* Name and partners name(At most 1 partner for this Assignment): 
+
+Jamie Camera and Cameron Perry 
+*NOTE: we had a new model and .ppm but git just refused to psh it fo some reason :(
+
+* How many hours did it take you to complete this Assignment? 
+8 
+* Did you collaborate or share ideas with any other students/TAs/Professors? 
+* Did you use any external resources? 
+  * (tbd if any)
+* (Optional) What was the most interesting part of the assignment? How would you improve this assignment?
   
 ## Description
 
-Due to COVID-19 effects, we have had to modify the cirriculum a bit.
-The two assignments here represent the last assignments in the class,
-and arguably some of the most important ones.  To accommodate the
-different interests students have and still provide adequate
-assignments has been a challenge.  Instead of having a single final
-project that can incorporate various aspects of computer graphics
-principles learned through the term, I have decided to allow you to
-choose 1 of the 2 assignments posted here.
+In previous lectures and labs, we learned that a single model might be
+used multiple times without increasing the memory load on either the
+CPU or GPU.  Additionally, we learned that we can abstract not just
+geometry, but lighting and shading as well.  However, we have yet to
+put some of these techniques into practice.
 
-Please choose and complete 1 of the 2 assignments below for full
-credit.  Extra credit will be given for full or partial implementation
-of the second assignment.
+A particle system is a technique in which an Emitter is created to
+place instances of an object or model in a scene and set up their
+initial parameters (things like velocity, lifespan, etc).  Each of
+these Particles will be changed as the scene is animated: They may be
+scaled to reduce size with every frame, they may rotate as the move in
+the scene, or change transparency.  Once a particle is at the end of
+its lifespan, it is destroyed and no longer rendered.
 
-### Assignment 1 - Scene Graph
+In this assignment, we are creating a fountain of models.  The Emitter
+is to be placed at the origin.  Each Particle will be an instance of
+geometry read in by your existing OBJ readers.  This means that
+instead of a fountain of water, we will be creating a fountain of
+bunnies, or houses, or monkeys, etc.  Particles should be emitted with
+an initial velocity that is generally up (0,1,0), but I encourage you
+to put some random numbers in the x and y components -- it's a
+fountain, not a hose!  Each particle should be scaled to your liking
+and have a lifespan measured in seconds, again, to your liking.  When
+the lifespan is reached, the object should be destroyed and no longer
+rendered.
 
-The Scene Graph is a key tool in computer graphics.  It is
-simultaneously an optimization strategy, an organizational construct,
-and an enabling technology to provide dynamic change in a scene.  In
-this assignment, you will implement a Scene Graph and apply it to a
-view of the Solar System.  The result of this assignment will be an
-animated scene with the sun and several planets (complete with moons)
-orbiting it.  You will utilize the Scene Graph to organize each
-transformation (rotation about the sun, rotation about the planet,
-rotation about the planet's axis) to show a dynamic scene with
-textured spheres as planets.
+Each Particle in our system should **NOT** contain its own copy of
+geometry from the model.  Instead, it should use a pointer to the
+model to facilitate rendering after modifying its position/scale/etc.
+Remember in Lab 8 we introduced a Renderable class that can be drawn
+with unique transforms!  Keep in mind that the velocity might start
+out as pointing up, but should be acted upon by gravity (0, -1, 0) as
+in a general simulation.  This will mean that the particles will go
+up, and then come back down as appropriate.
+  
+### Assignment Strategy
 
-### Assignment 2 - Particle System
+In order to get started with this assignment, I recommend reading
+about Particle Systems [here]
+(https://cesium.com/docs/tutorials/particle-systems/).  This is a pretty good tutorial on general particle systems.
+  
+## Emitters and Particles
 
-A Particle System is a class of graphics effects that make use of
-physical simulation, instancing, and lighting to create an effect or
-interaction method.  This assignment will make use of your OBJ Readers
-to read in a model that will be used as a particle.  A particle
-emitter will be placed at the origin (pointing up along the y axis)
-and instances of the model will be created, scaled, and then
-positioned according to gravity.  Since we will only ever have a
-single set of geometry loaded into memory (either CPU or GPU), this
-will test your implementation of instancing and show how a single
-model may be drawn differently many times without much additional
-overhead.
+The primary object that will be placed in the scene will be an
+Emitter.  The emitter can (and likely should) be its own class that
+might look something like this:
+
+```cpp
+class Emitter {
+protected:
+  QVector<Particle> particles_;
+  QVector3D position_;
+  QVector3D orientation_;
+  unsigned int particlesPerSecond_;
+  Renderable* particleModel_;
+  
+public:
+  Emitter(const QVector3D& position, const QVector3D& orientation, unsigned int pps, Renderable* particleModel);
+
+  void update(unsigned int msSinceLastFrame) {
+    // First, loop through all particles and update/draw them
+	// Then, determine how many particles must be emitted
+	// Then emit them one at a time.
+	// Then, clean up our particle vector by removing dead particles
+	
+  }
+  void emitParticle();
+};
+```
+
+Particles are always generated by an emitter and (mostly) manage
+themselves.  A Particle class might look something like:
+
+```cpp
+class Particle {
+protected:
+  Renderable* modelToRender_;
+  QMatrix4x4 particleTransform_;
+  QVector3D velocity_;
+  float secondsLeftToLive_;
+
+public:
+  Particle(Renderable* model, const QVector3D& velocity, float lifespan);
+
+  void updateAndDraw(unsigned int msSinceLastFrame);
+  bool isDead() const {return secondsLeftToLive_ > 0.0;}
+};
+```
+
+## Task 2 - Why is our system efficient?
+
+In a few sentences why is our approach of keeping a pointer to the
+geometry to be drawn an optimization? Note: You can learn more about [instancing](https://learnopengl.com/Advanced-OpenGL/Instancing).
+
+The system (at least what it was meant to be) is efficent because it does not make the machine load in the 
+same object more than once. It will only duplicate something that has already been made, which is extremly less
+intensive than reading in a file every time. Instancing makes it so that we draw many models at once, and only use
+those rendered models. 
+  
+**Answer here**: *Your answer here*
+  
+## How to run your program
+
+Your solution should compile using the standard CMake build procedure. 
+
+Your program should then run by typing in: `./lab`  
+
+
+## Deliverables
+
+- A solar system with at least 3 planets and 6 moons.
+- Edit the readme to answer Task 2
+
+* You need to commit your code to this repository.
+
+### Rubric
+
+<table>
+  <tbody>
+    <tr>
+      <th>Points</th>
+      <th align="center">Description</th>
+    </tr>
+    <tr>
+      <td>30% (Core)</td>
+	    <td align="left"> <ul><li>Is the code clearly documented?</li> <li>Are there no memory leaks?</li> <li>Did you make sure your code worked with the 'build.py' or did we have a headache compiling your code?</li></ul></td>
+    </tr>   
+    <tr>
+      <td>60% (Core)</td>
+	    <td align="left"><ul><li>(60%) Does the scene properly render. That is, do models get created, manipulated, and then disappear.</li></ul></td>
+	</tr>
+    <tr>
+      <td>10% (Advanced)</td>
+      <td align="left"><ul><li>(10%) Did you answer why our system strategy is often better than a naieve approach?</li></ul></td>
+	</tr>	
+  </tbody>
+</table>
+
+
+## More Resources
+
+Links on Scenegraphs
+* (**KEY resource**) [Read this tutorial](./media/SceneGraphs.pdf)
+* Nice slideshow on scene graphs: https://www.cs.utexas.edu/users/fussell/courses/cs354/lectures/lecture13.pdf
+* https://www.panda3d.org/manual/index.php/The_Scene_Graph
+* http://www.realityprime.com/blog/2007/06/scenegraphs-past-present-and-future/
+* http://what-when-how.com/advanced-methods-in-computer-graphics/scene-graphs-advanced-methods-in-computer-graphics-part-3/
+* https://en.wikipedia.org/wiki/Tree_traversal
+
+## Going Further
+
+* Try drawing other models or points to play with color, scale, and transparency* Try implementing transparency and depth sorting
 
