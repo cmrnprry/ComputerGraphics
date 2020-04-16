@@ -48,13 +48,10 @@ void BasicWidget::initializeGL()
 
     qDebug() << QDir::currentPath();
 
-    model = Render("../../objects/Cow.obj");
-    mat = MaterialRender("../../objects/Cow.mtl");
+    model = Render("../../objects/Bunny/ChocoEasterBunny2.obj");
 
-    QDir directory("C:/Users/Cam/Documents/GitHub/GraphicsForked/ComputerGraphics/Assignment6_SceneGraphOrParticleSystem/ParticleSystem/objects");
-    QString path = directory.filePath(QString::fromUtf8(mat.getDiffuse().c_str()));
-
-    std::cout << path.toStdString() << std::endl;
+    QDir directory("C:/Users/Cam/Documents/GitHub/GraphicsForked/ComputerGraphics/Assignment6_SceneGraphOrParticleSystem/ParticleSystem/objects/Bunny");
+    QString path = directory.filePath(QString::fromUtf8("ChocoEasterBunny2_colormap.ppm"));
 
     QVector<QVector3D> pos;
     QVector<QVector3D> norm;
